@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import "../shop.css";
 
 export default function Shop() {
   const { cart, setCart } = useOutletContext();
@@ -52,34 +53,47 @@ export default function Shop() {
     getItems();
   }, []);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="loading-container">
+        <div className="loading-text">Loading...</div>
+      </div>
+    );
 
   const productList = items.map((item) => {
     return (
-      <div className="card" key={item.id} onClick={() => {}}>
-        <img src={item.image} alt={item.name} />
-        <div>
-          {item.name} - ${item.price}{" "}
+      <div className="product-card" key={item.id}>
+        <div className="image-container">
+          <img src={item.image} alt={item.name} className="product-image" />
         </div>
-        <input
-          type="number"
-          min={1}
-          value={quantities[item.id] || ""}
-          onChange={(e) => handleQuantityChange(item.id, e.target.value)}
-        />
-        <button
-          onClick={() => addToCart(item, quantities[item.id] || 1)}
-          disabled={!quantities[item.id]}
-        >
-          Add to Cart
-        </button>
+        <div className="product-info">
+          <h2 className="product-name">{item.name}</h2>
+          <p className="product-price">${item.price.toFixed(2)}</p>
+        </div>
+        <div className="product-actions">
+          <input
+            type="number"
+            min={1}
+            value={quantities[item.id] || ""}
+            onChange={(e) => handleQuantityChange(item.id, e.target.value)}
+            className="quantity-input"
+          />
+          <button
+            onClick={() => addToCart(item, quantities[item.id] || 1)}
+            disabled={!quantities[item.id]}
+            className="add-to-cart-btn"
+          >
+            Add to Cart
+          </button>
+        </div>
       </div>
     );
   });
 
   return (
-    <div>
-      <h1>{productList}</h1>
+    <div className="shop-container">
+      <h1 className="shop-title">Shop</h1>
+      <div className="product-grid">{productList}</div>
     </div>
   );
 }

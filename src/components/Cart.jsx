@@ -1,4 +1,5 @@
 import { useOutletContext } from "react-router-dom";
+import "../cart.css";
 
 export default function Cart() {
   const { cart, setCart } = useOutletContext();
@@ -8,31 +9,44 @@ export default function Cart() {
     setCart(filtered);
   };
 
+  if (cart.length < 1)
+    return (
+      <div className="cart-container">
+        <h1 className="cart-title">Your Cart</h1>
+        <div className="empty-cart">No items in cart</div>
+      </div>
+    );
+
   let totalPrice = 0;
   const cartList = cart.map((entry, index) => {
-    console.log(entry);
-    let sum = entry.price * entry.quantity;
-    console.log(sum);
+    const sum = entry.price * entry.quantity;
     totalPrice += sum;
-    console.log(`total: ${totalPrice}`);
+
     return (
-      <div key={index}>
-        <div>{entry.name}</div>
-        <div>- {entry.quantity}</div>
-        <button onClick={() => removeFromCart(index)}>Remove Item</button>
+      <div className="cart-item" key={index}>
+        <div className="item-name">{entry.name}</div>
+        <div className="item-quantity">Quantity: {entry.quantity}</div>
+        <button className="remove-button" onClick={() => removeFromCart(index)}>
+          Remove
+        </button>
       </div>
     );
   });
 
-  if (cart.length < 1) return <i>Sorry, no items in cart</i>;
-
   return (
-    <>
-      <div>
-        <h1>This is your cart:</h1>
-        <div>Your cart: {cartList}</div>
-        {totalPrice > 0 && <div>Total: ${totalPrice}</div>}
-      </div>
-    </>
+    <div className="cart-container">
+      <h1 className="cart-title">Your Cart</h1>
+      <div className="cart-items">{cartList}</div>
+      {totalPrice > 0 && (
+        <div className="cart-total">
+          <button className="checkout" onClick={() => {}}>
+            Checkout
+          </button>
+          <div>
+            Total: <span>${totalPrice.toFixed(2)}</span>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
